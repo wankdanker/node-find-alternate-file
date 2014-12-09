@@ -15,7 +15,7 @@ npm install find-alternate-file
 usage
 -----
 
-##async
+###async
 
 ```js
 var find = require('find-alternate-file');
@@ -25,7 +25,7 @@ find('index.html', ['jade', 'ejs', 'dust'], function (err, found) {
 });
 
 ```
-##sync
+###sync
 
 ```js
 var findSync = require('find-alternate-file').findSync;
