@@ -11,10 +11,10 @@ module.exports.find = find;
 module.exports.findSync = findSync;
 
 function find(path, extensions, cb) {
-	var stat, i, dir, base, ext;
+	var stat, i, dir, base, ext, found;
 
-	check(path, function (err, result) {
-		if (result) {
+	check(path, function (err, stat) {
+		if (stat && !stat.isDirectory()) {
 			return cb(null, path);
 		}
 
@@ -38,32 +38,38 @@ function find(path, extensions, cb) {
 
 			path = join(dir, base + ext);
 
-			ck = check(path, function (err, result) {
-				return next(!result)
+			ck = check(path, function (err, stat) {
+				found = stat && !stat.isDirectory();
+
+				return next(!found)
 			});
 
 		}, function () {
 			//done;
+			if (!found) {
+				path = null;
+			}
+
 			return cb(null, path);
 		});
 	});
 
 	function check(path, cb) {
 		fs.stat(path, function (err, stat) {
-			return cb(null, !!stat);
+			return cb(null, stat);
 		});
 	}
 }
 
 function findSync(path, extensions) {
 	//first check if path exists;
-	var ck, i, dir, base, ext;
+	var ck, i, dir, base, ext, stat;
 	
 	extensions = extensions || [];
 
-	ck = check(path);
+	stat = check(path);
 
-	if (ck) {
+	if (stat && !stat.isDirectory()) {
 		return path;
 	}
 
@@ -82,9 +88,9 @@ function findSync(path, extensions) {
 
 		path = join(dir, base + ext);
 
-		ck = check(path);
+		stat = check(path);
 
-		if (ck) {
+		if (stat && !stat.isDirectory()) {
 			return path;
 		}
 	}
@@ -97,12 +103,8 @@ function findSync(path, extensions) {
 		try {
 			stat = fs.statSync(path);
 		}
-		catch (e) {
-			return false;
-		}
+		catch (e) {}
 
-		if (stat) {
-			return true;
-		}
+		return stat;
 	}
 }
