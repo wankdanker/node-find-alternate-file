@@ -43,3 +43,17 @@ test('async: work with or without the . prefix', function (t) {
 		t.end()
 	})
 })
+
+test('sync: work without extensions', function (t) {
+	var result = findSync('./test.js')
+	t.equal(result, './test.js')
+	t.end()
+})
+
+test('async: work without extensions', function (t) {
+	find('./test.js', function (err, result) {
+		t.error(err)
+		t.equal(result, './test.js')
+		t.end()
+	})
+})

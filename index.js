@@ -12,7 +12,13 @@ module.exports.findSync = findSync;
 
 function find(path, extensions, cb) {
 	var stat, i, dir, base, ext;
-	if (!Array.isArray(extensions)) extensions = [extensions];
+
+	if (typeof extensions === 'function') {
+		cb = extensions;
+		extensions = null;
+	}
+
+	extensions = normalize(extensions);
 
 	check(path, function (err, result) {
 		if (result) {
@@ -60,8 +66,7 @@ function findSync(path, extensions) {
 	//first check if path exists;
 	var ck, i, dir, base, ext;
 
-	extensions = extensions || [];
-	if (!Array.isArray(extensions)) extensions = [extensions];
+	extensions = normalize(extensions);
 
 	ck = check(path);
 
@@ -107,4 +112,14 @@ function findSync(path, extensions) {
 			return true;
 		}
 	}
+}
+
+/**
+ * Normalize a list of file extensions
+ */
+
+function normalize(list) {
+	if (!list) return [];
+	if (!Array.isArray(list)) return [list];
+	return list;
 }
