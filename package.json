@@ -1,6 +1,6 @@
 {
   "name": "find-alternate-file",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Given a file path and a list of file extensions, find a file that exists",
   "main": "index.js",
   "scripts": {
