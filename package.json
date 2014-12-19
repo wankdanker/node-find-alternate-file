@@ -25,5 +25,8 @@
   "homepage": "https://github.com/wankdanker/node-find-alternate-file",
   "dependencies": {
     "dank-do-while": "^0.1.2"
+  },
+  "devDependencies": {
+    "tape": "^3.0.3"
   }
 }

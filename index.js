@@ -13,8 +13,15 @@ module.exports.findSync = findSync;
 function find(path, extensions, cb) {
 	var stat, i, dir, base, ext, found;
 
-	check(path, function (err, stat) {
-		if (stat && !stat.isDirectory()) {
+	if (typeof extensions === 'function') {
+		cb = extensions;
+		extensions = null;
+	}
+
+	extensions = normalize(extensions);
+
+	check(path, function (err, result) {
+		if (result) {
 			return cb(null, path);
 		}
 
@@ -26,7 +33,7 @@ function find(path, extensions, cb) {
 
 		doWhile(function (next) {
 			ext = extensions[i++];
-		
+
 			if (!ext) {
 				path = null;
 				return next(false);
@@ -65,7 +72,7 @@ function findSync(path, extensions) {
 	//first check if path exists;
 	var ck, i, dir, base, ext, stat;
 	
-	extensions = extensions || [];
+	extensions = normalize(extensions);
 
 	stat = check(path);
 
@@ -81,7 +88,7 @@ function findSync(path, extensions) {
 	//else keep looking
 	for (i = 0; i < extensions.length; i++) {
 		ext = extensions[i];
-		
+
 		if (ext.substr(0,1) != '.') {
 			ext = '.' + ext;
 		}
@@ -107,4 +114,14 @@ function findSync(path, extensions) {
 
 		return stat;
 	}
+}
+
+/**
+ * Normalize a list of file extensions
+ */
+
+function normalize(list) {
+	if (!list) return [];
+	if (!Array.isArray(list)) return [list];
+	return list;
 }
