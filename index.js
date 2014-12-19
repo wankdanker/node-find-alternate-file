@@ -12,6 +12,7 @@ module.exports.findSync = findSync;
 
 function find(path, extensions, cb) {
 	var stat, i, dir, base, ext;
+	if (!Array.isArray(extensions)) extensions = [extensions];
 
 	check(path, function (err, result) {
 		if (result) {
@@ -26,7 +27,7 @@ function find(path, extensions, cb) {
 
 		doWhile(function (next) {
 			ext = extensions[i++];
-		
+
 			if (!ext) {
 				path = null;
 				return next(false);
@@ -58,8 +59,9 @@ function find(path, extensions, cb) {
 function findSync(path, extensions) {
 	//first check if path exists;
 	var ck, i, dir, base, ext;
-	
+
 	extensions = extensions || [];
+	if (!Array.isArray(extensions)) extensions = [extensions];
 
 	ck = check(path);
 
@@ -75,7 +77,7 @@ function findSync(path, extensions) {
 	//else keep looking
 	for (i = 0; i < extensions.length; i++) {
 		ext = extensions[i];
-		
+
 		if (ext.substr(0,1) != '.') {
 			ext = '.' + ext;
 		}
