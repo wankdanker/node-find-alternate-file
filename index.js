@@ -45,7 +45,7 @@ function find(path, extensions, cb) {
 
 			path = join(dir, base + ext);
 
-			ck = check(path, function (err, stat) {
+			check(path, function (err, stat) {
 				found = stat && !stat.isDirectory();
 
 				return next(!found)
